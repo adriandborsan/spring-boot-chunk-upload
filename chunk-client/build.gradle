@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.adriandborsan'
+version = '1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
