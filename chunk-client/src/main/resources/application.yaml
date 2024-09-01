@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: chunk-client
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+server:
+  port: 9091
+  tomcat:
+    max-swallow-size: 100MB
+chunked:
+  upload:
+    base:
+      url: http://localhost:9090
+max-file-size: 8

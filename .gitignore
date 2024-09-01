@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+/upload/*
+!/upload/temp
+/upload/temp/*
+!/upload/temp/.gitkeep

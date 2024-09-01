@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Upload Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin: 10px 0;
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .file-drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 30px;
+            text-align: center;
+            font-size: 16px;
+            color: #aaa;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .file-drop-area.drag-over {
+            border-color: #666;
+        }
+
+        .file-drop-area input[type="file"] {
+            display: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e0ffe0;
+            border: 1px solid #4CAF50;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>File Upload Form</h2>
+    <form enctype='multipart/form-data' id="uploadForm">
+        <label for="fileName">File Name:</label>
+        <input id="fileName" name="fileName" required type="text">
+
+        <label for="fileDescription">File Description:</label>
+        <input id="fileDescription" name="fileDescription" required type="text">
+
+        <div class="file-drop-area" id="fileDropArea">
+            Drag & Drop your file here or click to upload
+            <input id="fileInput" name="file" required type="file">
+        </div>
+
+        <button class="submit-button" type="submit">Submit</button>
+    </form>
+
+    <div id="response"></div>
+</div>
+
+<script>
+    const fileDropArea = document.getElementById('fileDropArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadForm = document.getElementById('uploadForm');
+    const responseDiv = document.getElementById('response');
+
+    // Drag-and-drop events
+    fileDropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        fileDropArea.classList.add('drag-over');
+    });
+
+    fileDropArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        fileDropArea.classList.remove('drag-over');
+    });
+
+    fileDropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        fileDropArea.classList.remove('drag-over');
+        fileInput.files = e.dataTransfer.files;
+    });
+
+    fileDropArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            fileDropArea.textContent = fileInput.files[0].name;
+        }
+    });
+
+    // Submit form using AJAX and display response
+    uploadForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(uploadForm);
+        formData.append('file', fileInput.files[0]); // Ensure the file input field is used correctly
+
+        fetch('http://localhost:9091/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = data;
+        })
+        .catch(error => {
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = 'Error: ' + error;
+        });
+    });
+</script>
+
+</body>
+</html>

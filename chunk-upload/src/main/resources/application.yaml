@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: chunk-upload
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+server:
+  port: 9090
+  tomcat:
+    max-swallow-size: 10MB
+upload-dir: "./uploads/"
+temp-dir: "./uploads/temp/"
